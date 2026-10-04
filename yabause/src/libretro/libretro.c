@@ -28,8 +28,10 @@
 #include "cs2.h"
 
 #include "m68kcore.h"
-#include "vidogl.h"
 #include "vidsoft.h"
+#ifdef HAVE_GL
+#include "vidogl.h"
+#endif
 #include "libretro_core_options.h"
 #ifdef HAVE_PLAY_JIT
 #include "sh2_jit.h"
@@ -493,6 +495,9 @@ SoundInterface_struct *SNDCoreList[] = {
 VideoInterface_struct *VIDCoreList[] = {
     //&VIDDummy,
     &VIDSoft,
+#ifdef HAVE_GL
+    &VIDOgl,
+#endif
     NULL
 };
 
@@ -1104,7 +1109,11 @@ bool retro_load_game(const struct retro_game_info *info)
 #else
    yinit.sh2coretype          = SH2CORE_INTERPRETER;
 #endif
+#ifdef HAVE_GL
+   yinit.vidcoretype          = VIDCORE_OGL;
+#else
    yinit.vidcoretype          = VIDCORE_SOFT;
+#endif
    yinit.sndcoretype          = SNDCORE_LIBRETRO;
 #ifdef HAVE_MUSASHI
    yinit.m68kcoretype         = M68KCORE_MUSASHI;
